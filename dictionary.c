@@ -11,7 +11,9 @@
 #define false 0
 #define true 1
 
-struct trie tree;
+
+
+
 
 struct trie_node
 {
@@ -25,6 +27,8 @@ struct trie
 {
     struct trie_node root;
 };
+
+struct trie tree;
 
 /**
 * Converts a character to an integer value based upon its position in
@@ -87,6 +91,8 @@ int trie_insert(struct trie_node *node, const char *word, char *description)
         if (!node)
         {
             node = malloc(sizeof(struct trie_node));
+			node->value = NULL;
+			memset(node->children, 0, sizeof(node->children));
             parent->children[letter] = node;
         }
     }
@@ -129,7 +135,8 @@ char *trie_get(struct trie_node *node, const char *word)
 
 void dictionary_initialise()
 {
-    tree = (struct trie) {}; // zeroes the tree
+	memset(&tree, 0, sizeof(tree));
+    //tree = (struct trie) {}; // zeroes the tree
 }
 
 int dictionary_read_from_file(const char * filename)
@@ -148,6 +155,9 @@ int dictionary_read_from_file(const char * filename)
 
     int count = 0;
 
+	memset(word, 0, MAX_WORD_SIZE);
+	memset(desc, 0, MAX_DESC_SIZE);
+
     // ensure that at least two items are being parsed (word & desc)
     while (fscanf(file, "%s %[^\n]", word, desc) > 1)
     {
@@ -160,6 +170,8 @@ int dictionary_read_from_file(const char * filename)
         {
             count++;
         }
+		memset(word, 0, MAX_WORD_SIZE);
+		memset(desc, 0, MAX_DESC_SIZE);
     }
 
     fclose(file);
